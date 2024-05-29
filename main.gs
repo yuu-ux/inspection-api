@@ -14,7 +14,7 @@ function resetScriptProperties() {
 
 function searchConsoleInspect() {
   let apiURL = "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect";
-  let siteUrl = "/*サイトのプロパティを設定する*/";
+  let siteUrl = "";
 
   // 検査対象のURLの配列を定義してください
   let inspectUrls = [
@@ -82,12 +82,19 @@ function searchConsoleInspect() {
           date
         ];
         sheet.appendRow(row);
+        errorFlag = 0;
       } else {
-        // エラー行を追加
+        if (!errorFlag) {
+          i--;
+          errorFlag = 1
+          siteUrl = "";
+        } else {
+          // エラー行を追加
         let errorRow = [inspectUrl, "結果が取得できませんでした。"];
         let appendResult = sheet.appendRow(errorRow);
         let lastRow = sheet.getLastRow(); // 最後に追加された行番号を取得
         sheet.getRange(`K${lastRow}`).setValue(date); // 最後に追加された行のK列に日付を設定
+        }
       }
     } catch (error) {
       // エラー行を追加
